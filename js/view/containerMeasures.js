@@ -12,7 +12,7 @@ function containerRowMeasures(mainContainer, movieCardClass) {
   }
 
   function getMovieCardDimensions() {
-    return mainContainer.querySelector(`.${movieCardClass}`).offsetWidth;
+    return mainContainer.querySelector(`.${movieCardClass}`).getBoundingClientRect().width;
   }
 
   function getContainerWidth() {

@@ -87,10 +87,7 @@ function Controller(){
                 event.key == "ArrowDown" ||
                 event.key == "s" ||
                 event.key == "S"
-            ){
-                console.log(recalculateItemsPerRow());
-              view.applyFocusToElement(this, recalculateItemsPerRow());  
-            } 
+            ) view.applyFocusToElement(this, recalculateItemsPerRow());  
             else if (
                 event.key == "ArrowUp" ||
                 event.key == "w" ||
