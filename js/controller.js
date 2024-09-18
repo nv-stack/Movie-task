@@ -70,6 +70,12 @@ function Controller(){
     function setupEventHandlers(){
         const recalculateItemsPerRow = calculateItemsPerRow();
         const offsetScrollLoader = 5;
+        const DIRECTIONS = {
+            UP: () => -recalculateItemsPerRow(),
+            DOWN: () => recalculateItemsPerRow(),
+            LEFT: () => -1,
+            RIGHT: () => 1
+        }
         function navigatonHandler(event){
             if (event.key == "Enter") 
                 view.toggleFavouriteIcon.call(view.getFavouriteSvgFromMovieCard(this));
@@ -77,22 +83,22 @@ function Controller(){
                 event.key == "ArrowRight" ||
                 event.key == "d" ||
                 event.key == "D"
-            ) view.applyFocusToElement(this, 1);
+            ) view.applyFocusToElement(this, DIRECTIONS.RIGHT());
             else if (
                 event.key == "ArrowLeft" ||
                 event.key == "a" ||
                 event.key == "A"
-            ) view.applyFocusToElement(this, -1);
+            ) view.applyFocusToElement(this, DIRECTIONS.LEFT());
             else if (
                 event.key == "ArrowDown" ||
                 event.key == "s" ||
                 event.key == "S"
-            ) view.applyFocusToElement(this, recalculateItemsPerRow());  
+            ) view.applyFocusToElement(this, DIRECTIONS.DOWN());  
             else if (
                 event.key == "ArrowUp" ||
                 event.key == "w" ||
                 event.key == "W"
-            ) view.applyFocusToElement(this, -recalculateItemsPerRow());
+            ) view.applyFocusToElement(this, DIRECTIONS.UP());
         }
 
         function scrollHandler(){
