@@ -20,11 +20,9 @@ function Model(){
 
     async function getMovies(...dataTransformationFunctions) {
         try {
-            if(!isSessionStorageEmpty()) {
-                calculatePages(getMoviesFromSessionStorage());
-                return;
-            }
+            if (isDataInSessionStorage()) return;
             const data = await fetchMovies();
+            validateData(data);
             const modifedData = applyDataTransformations(data);
             storeInSessionStorage(modifedData);
             calculatePages(modifedData);
@@ -32,11 +30,17 @@ function Model(){
             throw new Error(error.message);
         }
 
+        function isDataInSessionStorage(){
+            const isDataLoaded = !isSessionStorageEmpty();
+            if(isDataLoaded) calculatePages(getMoviesFromSessionStorage());
+            return isDataLoaded;
+        }
+
         function applyDataTransformations(data) {
           for (const func of dataTransformationFunctions) {
             if (typeof func == "function") {
-              validateData(data);
-              data = func(data);
+                data = func(data);
+                validateData(data);
             }
           }
           return data;
@@ -77,7 +81,7 @@ function Model(){
         if(data.length === 0) throw new Error("No movies to display");
     }
 
-    function goToNextPage() {
+    function increaseCurrentPage() {
         currentPage++;
     }
 
@@ -92,7 +96,7 @@ function Model(){
     return {
         getMovies,
         moviePosterPathPrefix,
-        goToNextPage,
+        goToNextPage: increaseCurrentPage,
         getPaginatedData,
         getCurrentPage,
         getItemsPerPage

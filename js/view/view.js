@@ -43,7 +43,7 @@ function View(){
         function createPosterMovieImage(){
           const posterMovieImg = document.createElement("img");
           posterMovieImg.classList.add("lazy-load");
-          posterMovieImg.setAttribute("src", movie.poster_path ? posterPathPrefix + movie.poster_path : "");
+          posterMovieImg.setAttribute("src", movie.poster_path ? posterPathPrefix + movie.poster_path : "/images/placeholder-image.jpg");
           posterMovieImg.setAttribute("loading", "lazy");
           posterMovieImg.setAttribute("alt", movie.original_title);
           return posterMovieImg;
