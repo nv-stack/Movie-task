@@ -16,21 +16,25 @@ function Controller(){
             view.setLoader();
             await model.getMovies(removeDuplicates, sortByImdbRating);
             view.removeLoader();
-            prepareAndRenderMovies();
+            createUI();
         } catch (error) { 
             view.handleNoContent(error.message);
         }
     }
     
-    function prepareAndRenderMovies(){
+    function createUI(){
         try {
             renderMovies();
-            const handlers = setupEventHandlers();
-            applyPaginationMechanic(handlers.scrollHandler);
-            attachListeners(handlers);
+            proceedHandlers();
             model.increaseCurrentPage();
         } catch (error) {
             view.handleNoContent(error.message);
+        }
+
+        function proceedHandlers(){
+            const handlers = setupEventHandlers();
+            applyPaginationMechanic(handlers.scrollHandler);
+            attachListeners(handlers);
         }
     }
 

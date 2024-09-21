@@ -38,13 +38,16 @@ function View(){
         const placeholderImg = document.createElement("section");
         placeholderImg.classList.add("placeholder-img");
 
-        const movieImg = document.createElement("img");
-        movieImg.classList.add("lazy-load");
-        movieImg.setAttribute("src", movie.poster_path ? posterPathPrefix + movie.poster_path : "");
-        movieImg.setAttribute("loading", "lazy");
-        movieImg.setAttribute("alt", movie.original_title);
+        placeholderImg.appendChild(createPosterMovieImage());
 
-        placeholderImg.appendChild(movieImg);
+        function createPosterMovieImage(){
+          const posterMovieImg = document.createElement("img");
+          posterMovieImg.classList.add("lazy-load");
+          posterMovieImg.setAttribute("src", movie.poster_path ? posterPathPrefix + movie.poster_path : "");
+          posterMovieImg.setAttribute("loading", "lazy");
+          posterMovieImg.setAttribute("alt", movie.original_title);
+          return posterMovieImg;
+        }
 
         return placeholderImg;
       }
@@ -58,21 +61,27 @@ function View(){
       function createMovieDetails(movie) {
         const movieDetailsSection = document.createElement("section");
         movieDetailsSection.classList.add("movie-details");
-
-        const movieReleaseDate = document.createElement("p");
-        movieReleaseDate.textContent = movie.release_date ? movie.release_date : "Unknown date";
-
-        const favouriteMovieSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        favouriteMovieSvg.classList.add(favouriteiconClass);
-        favouriteMovieSvg.setAttribute("viewBox", "0 0 24 24");
-        favouriteMovieSvg.setAttribute("fill", "none");
-        favouriteMovieSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        favouriteMovieSvg.innerHTML = `
-          <path d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"/>
-          `;
         
-        movieDetailsSection.appendChild(movieReleaseDate);
-        movieDetailsSection.appendChild(favouriteMovieSvg);
+        movieDetailsSection.appendChild(createReleaseDate());
+        movieDetailsSection.appendChild(createFavouriteIcon());
+
+        function createReleaseDate() {
+          const movieReleaseDate = document.createElement("p");
+          movieReleaseDate.textContent = movie.release_date ? movie.release_date : "Unknown date";
+          return movieReleaseDate;
+        }
+
+        function createFavouriteIcon() {
+          const favouriteMovieSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          favouriteMovieSvg.classList.add(favouriteiconClass);
+          favouriteMovieSvg.setAttribute("viewBox", "0 0 24 24");
+          favouriteMovieSvg.setAttribute("fill", "none");
+          favouriteMovieSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          favouriteMovieSvg.innerHTML = `
+            <path d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"/>
+            `;
+          return favouriteMovieSvg;
+        }
 
         return movieDetailsSection;
       }
@@ -135,20 +144,25 @@ function View(){
 
     function applyFocusToElement(current, position) {
         let elementToFocus = current;
-        if(position > 0){
-            while(position > 0){
-                if(!elementToFocus.nextElementSibling) break;
-                elementToFocus = elementToFocus.nextElementSibling;
-                position--;
-            }
-        } else {
-            while(position < 0){
-                if(!elementToFocus.previousElementSibling) break;
-                elementToFocus = elementToFocus.previousElementSibling;
-                position++;
+        if(position > 0) goForward();
+        else goBackward();
+        elementToFocus.focus();
+
+        function goForward(){
+          while(position > 0){
+              if(!elementToFocus.nextElementSibling) break;
+              elementToFocus = elementToFocus.nextElementSibling;
+              position--;
             }
         }
-        elementToFocus.focus();
+
+        function goBackward(){
+          while(position < 0){
+              if(!elementToFocus.previousElementSibling) break;
+              elementToFocus = elementToFocus.previousElementSibling;
+              position++;
+            }
+        }
     }
 
     function attachNavigationListener(element, handler){
@@ -189,7 +203,7 @@ function View(){
 
     return {
       renderMovies,
-      lazyLoadImages,
+      lazyLoadImages, 
       setLoader,
       removeLoader,
       handleNoContent,
