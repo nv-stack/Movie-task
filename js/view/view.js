@@ -165,34 +165,47 @@ function View(){
         }
     }
 
-    function attachNavigationListener(element, handler){
-        element.addEventListener("keydown", handler);
-    }
+    
+    function attachListeners(element, handler){
+  
+      function attachNavigationListener(){
+          element.addEventListener("keydown", handler);
+      }
+  
+      function attachEnterListener(){
+          element.addEventListener("keydown", function(event){
+              if(event.key == "Enter") handler.call(this);
+          });
+      }
+  
+      function attachFocusListener(){
+          element.addEventListener("focus", function(event){
+              scrollToElement();
+              if(handler && typeof handler == 'function') additionalHandler(event);
+  
+              function scrollToElement(){
+                element.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                  inline: "center",
+                });
+              }
+          });
+      }
 
-    function attachEnterListener(element, handler){
-        element.addEventListener("keydown", function(event){
-            if(event.key == "Enter") handler.call(this);
-        });
-    }
+      function attachClickListener(){
+          element.addEventListener("click", handler);
+      }
 
-    function attachFocusListener(element, additionalHandler){
-        element.addEventListener("focus", function(event){
-            scrollToElement();
-            if(additionalHandler && typeof additionalHandler == 'function') additionalHandler(event);
-
-            function scrollToElement(){
-              element.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "center",
-              });
-            }
-        });
+      return {
+          attachNavigationListener,
+          attachEnterListener,
+          attachFocusListener,
+          attachClickListener,
+      }
     }
+    
 
-    function attachClickListener(element, handler){
-        element.addEventListener("click", handler);
-    }
 
     function toggleFavouriteIcon() {
         this.classList.toggle(favouriteIconMarkedClass);
@@ -219,10 +232,7 @@ function View(){
       handleNoContent,
       toggleFavouriteIcon,
       applyFocusToElement,
-      attachNavigationListener,
-      attachEnterListener,
-      attachClickListener,
-      attachFocusListener,
+      attachListeners,
       attachScrollOnWindowListener,
       getMovieCards,
       getFavouriteIcons,

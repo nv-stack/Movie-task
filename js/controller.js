@@ -63,14 +63,14 @@ function Controller(){
         const itemsPerPage = model.getItemsPerPage();
         view.lazyLoadImages(currentPage, itemsPerPage);
         view.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
-            view.attachNavigationListener(card, handlers.navigatonHandler);
-            view.attachEnterListener(card, function(){
+            view.attachListeners(card, handlers.navigatonHandler).attachNavigationListener();
+            view.attachListeners(card, function(){
                 handlers.toggleFavouriteHandler.call(view.getFavouriteSvgFromMovieCard(this));
-            });
-            view.attachFocusListener(card);
+            }).attachEnterListener();
+            view.attachListeners(card).attachFocusListener();
         });
         view.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
-            view.attachClickListener(icon, handlers.toggleFavouriteHandler);
+            view.attachListeners(icon, handlers.toggleFavouriteHandler).attachClickListener();
         });
     }
     
