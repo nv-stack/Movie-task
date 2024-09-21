@@ -77,7 +77,7 @@ function Model(){
         if(data.length === 0) throw new Error("No movies to display");
     }
 
-    function increaseCurrentPage() {
+    function goToNextPage() {
         currentPage++;
     }
 
@@ -92,7 +92,7 @@ function Model(){
     return {
         getMovies,
         moviePosterPathPrefix,
-        increaseCurrentPage,
+        goToNextPage,
         getPaginatedData,
         getCurrentPage,
         getItemsPerPage

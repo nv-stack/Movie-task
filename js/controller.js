@@ -26,7 +26,7 @@ function Controller(){
         try {
             renderMovies();
             proceedHandlers();
-            model.increaseCurrentPage();
+            model.goToNextPage();
         } catch (error) {
             view.handleNoContent(error.message);
         }
@@ -44,11 +44,11 @@ function Controller(){
         view.renderMovies(data, model.moviePosterPathPrefix, model.getCurrentPage(), model.getItemsPerPage());
     }
 
-    function laodMoreMovies(handlers){
+    function loadMoreMovies(handlers){
         try{
             renderMovies();
             attachListeners(handlers);
-            model.increaseCurrentPage();
+            model.goToNextPage();
         } catch (error) {
             console.log(error.message);
         }
@@ -106,7 +106,7 @@ function Controller(){
 
         function scrollHandler(){
             const { scrollTop, scrollHeight, clientHeight } = view.getScrollMeasures();
-            if (scrollTop + clientHeight >= scrollHeight - offsetScrollLoader) laodMoreMovies({navigatonHandler, toggleFavouriteHandler});
+            if (scrollTop + clientHeight >= scrollHeight - offsetScrollLoader) loadMoreMovies({navigatonHandler, toggleFavouriteHandler});
         }
 
         function toggleFavouriteHandler(){
