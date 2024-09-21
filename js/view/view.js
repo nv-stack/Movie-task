@@ -169,14 +169,24 @@ function View(){
         element.addEventListener("keydown", handler);
     }
 
+    function attachEnterListener(element, handler){
+        element.addEventListener("keydown", function(event){
+            if(event.key == "Enter") handler.call(this);
+        });
+    }
+
     function attachFocusListener(element, additionalHandler){
         element.addEventListener("focus", function(event){
-            element.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-              inline: "center",
-            });
+            scrollToElement();
             if(additionalHandler && typeof additionalHandler == 'function') additionalHandler(event);
+
+            function scrollToElement(){
+              element.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center",
+              });
+            }
         });
     }
 
@@ -210,6 +220,7 @@ function View(){
       toggleFavouriteIcon,
       applyFocusToElement,
       attachNavigationListener,
+      attachEnterListener,
       attachClickListener,
       attachFocusListener,
       attachScrollOnWindowListener,

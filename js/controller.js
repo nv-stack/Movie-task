@@ -64,6 +64,9 @@ function Controller(){
         view.lazyLoadImages(currentPage, itemsPerPage);
         view.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
             view.attachNavigationListener(card, handlers.navigatonHandler);
+            view.attachEnterListener(card, function(){
+                handlers.toggleFavouriteHandler.call(view.getFavouriteSvgFromMovieCard(this));
+            });
             view.attachFocusListener(card);
         });
         view.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
@@ -74,35 +77,31 @@ function Controller(){
     function setupEventHandlers(){
         const recalculateItemsPerRow = calculateItemsPerRow();
         const offsetScrollLoader = 5;
-        const DIRECTIONS = {
-            UP: () => -recalculateItemsPerRow(),
-            DOWN: () => recalculateItemsPerRow(),
-            LEFT: () => -1,
-            RIGHT: () => 1
-        }
+
+        const DIRECTION = {
+            UP: {
+                condition: (event) => event.key == "ArrowUp" || event.key == "w" || event.key == "W",
+                action: () => -recalculateItemsPerRow()
+            },
+            DOWN: {
+                condition: (event) => event.key == "ArrowDown" || event.key == "s" || event.key == "S",
+                action: () => recalculateItemsPerRow()
+            },
+            LEFT: {
+                condition: (event) => event.key == "ArrowLeft" || event.key == "a" || event.key == "A",
+                action: () => -1
+            },
+            RIGHT: {
+                condition: (event) => event.key == "ArrowRight" || event.key == "d" || event.key == "D",
+                action: () => 1
+            }
+        };
+
         function navigatonHandler(event){
-            if (event.key == "Enter") 
-                view.toggleFavouriteIcon.call(view.getFavouriteSvgFromMovieCard(this));
-            else if (
-                event.key == "ArrowRight" ||
-                event.key == "d" ||
-                event.key == "D"
-            ) view.applyFocusToElement(this, DIRECTIONS.RIGHT());
-            else if (
-                event.key == "ArrowLeft" ||
-                event.key == "a" ||
-                event.key == "A"
-            ) view.applyFocusToElement(this, DIRECTIONS.LEFT());
-            else if (
-                event.key == "ArrowDown" ||
-                event.key == "s" ||
-                event.key == "S"
-            ) view.applyFocusToElement(this, DIRECTIONS.DOWN());  
-            else if (
-                event.key == "ArrowUp" ||
-                event.key == "w" ||
-                event.key == "W"
-            ) view.applyFocusToElement(this, DIRECTIONS.UP());
+            if (DIRECTION.RIGHT.condition(event)) view.applyFocusToElement(this, DIRECTION.RIGHT.action());
+            else if (DIRECTION.LEFT.condition(event)) view.applyFocusToElement(this, DIRECTION.LEFT.action());
+            else if (DIRECTION.DOWN.condition(event)) view.applyFocusToElement(this, DIRECTION.DOWN.action());  
+            else if (DIRECTION.UP.condition(event)) view.applyFocusToElement(this, DIRECTION.UP.action());
         }
 
         function scrollHandler(){
