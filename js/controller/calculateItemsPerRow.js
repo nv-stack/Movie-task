@@ -8,22 +8,37 @@ export default function (view){
     let containerDimesions = getContainerDimensions(getComputedStyleOfContainer());
     let containerPaddingLeft = containerDimesions.containerPaddingLeft;
     let containerPaddingRight = containerDimesions.containerPaddingRight;
-    let containerWidth = getContainerWidth() - containerPaddingLeft - containerPaddingRight;
+    let containerWidth = calculateContainerWidth();
     let itemWidth = getMovieCardDimensions();
-    let gap = parseFloat(containerDimesions.gap) || 0;
-    let itemsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap));
+    let gap = calculateGapWidth();
+    let itemsPerRow = calculateItemsPerRow();
+
+    function calculateContainerWidth(){
+        return getContainerWidth() - containerPaddingLeft - containerPaddingRight
+    }
+
+    function calculateGapWidth(){
+        return parseFloat(containerDimesions.gap) || 0;
+    }
+
+    function calculateItemsPerRow(){
+        return Math.floor((containerWidth + gap) / (itemWidth + gap));
+    }
+
+    function isSameContainerWidth(){
+        return containerWidth == getContainerWidth() - containerPaddingLeft - containerPaddingRight;
+    }
 
     return function () {
-        if (containerWidth == getContainerWidth() - containerPaddingLeft - containerPaddingRight)
-        return itemsPerRow;
+        if (isSameContainerWidth()) return itemsPerRow;
         console.log("Re-calculating items per row");
         containerDimesions = getContainerDimensions(getComputedStyleOfContainer());
         containerPaddingLeft = containerDimesions.containerPaddingLeft;
         containerPaddingRight = containerDimesions.containerPaddingRight;
-        containerWidth = getContainerWidth() - containerPaddingLeft - containerPaddingRight;
+        containerWidth = calculateContainerWidth();
         itemWidth = getMovieCardDimensions();
-        gap = parseFloat(containerDimesions.gap) || 0;
-        itemsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap));
+        gap = calculateGapWidth();
+        itemsPerRow = calculateItemsPerRow();
         return itemsPerRow;
     };
 }
