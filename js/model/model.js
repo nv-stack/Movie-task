@@ -10,7 +10,6 @@ function Model(){
     async function fetchMovies() {
         try {
             const response = await fetch(baseUrl);
-            console.log(response);
             if (response.status != 200) throw new Error("Cannot fetch the data");
             return await response.json();
         } catch (error) {
@@ -37,13 +36,13 @@ function Model(){
         }
 
         function applyDataTransformations(data) {
-          for (const func of dataTransformationFunctions) {
-            if (typeof func == "function") {
-                data = func(data);
-                validateData(data);
+            for (const func of dataTransformationFunctions) {
+                if (typeof func == "function") {
+                    data = func(data);
+                    validateData(data);
+                }
             }
-          }
-          return data;
+            return data;
         }
         
         function validateData(data) {

@@ -1,4 +1,4 @@
-function containerRowMeasures(mainContainer, movieCardClass) {
+export default function(mainContainer, movieCardClass) {
   function getComputedStyleOfContainer() {
     return getComputedStyle(mainContainer);
   }
@@ -25,6 +25,3 @@ function containerRowMeasures(mainContainer, movieCardClass) {
     getContainerWidth,
   };
 }
-
-export { containerRowMeasures };
-

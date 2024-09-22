@@ -1,4 +1,4 @@
-import { containerRowMeasures } from "./containerMeasures.js";
+import containerRowMeasures from "./containerMeasures.js";
 
 function View(){
     const mainContainer = document.querySelector("main");

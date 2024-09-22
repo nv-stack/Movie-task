@@ -1,6 +1,8 @@
-import Model from './model/model.js';
-import { removeDuplicates, sortByImdbRating } from './model/operations.js';
-import View from './view/view.js';
+import Model from '../model/model.js';
+import { removeDuplicates, sortByImdbRating } from '../model/operations.js';
+import View from '../view/view.js';
+
+import calculateItemsPerRow from './calculateItemsPerRow.js';
 
 
 const controller = Controller();
@@ -25,15 +27,15 @@ function Controller(){
     function createUI(){
         try {
             renderMovies();
-            proceedHandlers();
+            initializeEventHandlers();
             model.goToNextPage();
         } catch (error) {
             view.handleNoContent(error.message);
         }
 
-        function proceedHandlers(){
-            const handlers = setupEventHandlers();
-            applyPaginationMechanic(handlers.scrollHandler);
+        function initializeEventHandlers(){
+            const handlers = defineEventHandlers();
+            setupPagination(handlers.scrollHandler);
             attachListeners(handlers);
         }
     }
@@ -54,7 +56,7 @@ function Controller(){
         }
     }
 
-    function applyPaginationMechanic(handler){
+    function setupPagination(handler){
         view.attachScrollOnWindowListener(handler);
     }
 
@@ -74,8 +76,8 @@ function Controller(){
         });
     }
     
-    function setupEventHandlers(){
-        const recalculateItemsPerRow = calculateItemsPerRow();
+    function defineEventHandlers(){
+        const recalculateItemsPerRow = calculateItemsPerRow(view);
         const offsetScrollLoader = 5;
 
         const DIRECTION = {
@@ -118,35 +120,6 @@ function Controller(){
             scrollHandler
         }
     }
-
-    function calculateItemsPerRow() {
-        const { getComputedStyleOfContainer,
-                getContainerDimensions,
-                getMovieCardDimensions,
-                getContainerWidth
-        } = view.getContainerRowMeasures();
-        let containerDimesions = getContainerDimensions(getComputedStyleOfContainer());
-        let containerPaddingLeft = containerDimesions.containerPaddingLeft;
-        let containerPaddingRight = containerDimesions.containerPaddingRight;
-        let containerWidth = getContainerWidth() - containerPaddingLeft - containerPaddingRight;
-        let itemWidth = getMovieCardDimensions();
-        let gap = parseFloat(containerDimesions.gap) || 0;
-        let itemsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap));
-    
-        return function () {
-          if (containerWidth == getContainerWidth() - containerPaddingLeft - containerPaddingRight)
-            return itemsPerRow;
-          console.log("Re-calculating items per row");
-          containerDimesions = getContainerDimensions(getComputedStyleOfContainer());
-          containerPaddingLeft = containerDimesions.containerPaddingLeft;
-          containerPaddingRight = containerDimesions.containerPaddingRight;
-          containerWidth = getContainerWidth() - containerPaddingLeft - containerPaddingRight;
-          itemWidth = getMovieCardDimensions();
-          gap = parseFloat(containerDimesions.gap) || 0;
-          itemsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap));
-          return itemsPerRow;
-        };
-    };
 
     return {
         initializeApp
