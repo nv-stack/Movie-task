@@ -82,27 +82,7 @@ function Controller(){
     }
     
     function defineEventHandlers(){
-        const recalculateItemsPerRow = calculateItemsPerRow(view);
-        const offsetScrollLoader = 5;
-
-        const DIRECTION = {
-            UP: {
-                condition: (event) => event.key == "ArrowUp" || event.key == "w" || event.key == "W",
-                action: () => -recalculateItemsPerRow()
-            },
-            DOWN: {
-                condition: (event) => event.key == "ArrowDown" || event.key == "s" || event.key == "S",
-                action: () => recalculateItemsPerRow()
-            },
-            LEFT: {
-                condition: (event) => event.key == "ArrowLeft" || event.key == "a" || event.key == "A",
-                action: () => -1
-            },
-            RIGHT: {
-                condition: (event) => event.key == "ArrowRight" || event.key == "d" || event.key == "D",
-                action: () => 1
-            }
-        };
+        const { DIRECTION, offsetScrollLoader } = getConfigForHandlers();
 
         function navigatonHandler(event){
             if (DIRECTION.RIGHT.condition(event)) view.applyFocusToElement(this, DIRECTION.RIGHT.action());
@@ -119,6 +99,36 @@ function Controller(){
         function toggleFavouriteHandler(){
             view.toggleFavouriteIcon.call(this);
         }
+
+        function getConfigForHandlers(){
+            const recalculateItemsPerRow = calculateItemsPerRow(view);
+            const offsetScrollLoader = 5;
+            const DIRECTION = {
+                UP: {
+                    condition: (event) => event.key == "ArrowUp" || event.key == "w" || event.key == "W",
+                    action: () => -recalculateItemsPerRow()
+                },
+                DOWN: {
+                    condition: (event) => event.key == "ArrowDown" || event.key == "s" || event.key == "S",
+                    action: () => recalculateItemsPerRow()
+                },
+                LEFT: {
+                    condition: (event) => event.key == "ArrowLeft" || event.key == "a" || event.key == "A",
+                    action: () => -1
+                },
+                RIGHT: {
+                    condition: (event) => event.key == "ArrowRight" || event.key == "d" || event.key == "D",
+                    action: () => 1
+                }
+            };
+
+            return {
+                DIRECTION,
+                recalculateItemsPerRow,
+                offsetScrollLoader
+            }
+        }
+
         return {
             navigatonHandler,
             toggleFavouriteHandler,
