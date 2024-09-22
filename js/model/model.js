@@ -92,9 +92,13 @@ function Model(){
         return itemsPerPage;
     }
 
+    function getMoviePosterPathPrefix() {
+        return moviePosterPathPrefix;
+    }
+
     return {
         getMovies,
-        moviePosterPathPrefix,
+        getMoviePosterPathPrefix,
         goToNextPage: increaseCurrentPage,
         getPaginatedData,
         getCurrentPage,

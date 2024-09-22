@@ -9,12 +9,12 @@ function View(){
     const favouriteiconClass = "favourite-svg";
     const favouriteIconMarkedClass = "favourite-svg-marked";
 
-    function renderMovies(movies, posterPathPrefix, currentPage, itemsPerPage) {
+    function renderMovies(data) {
       removeNoContentClassFromContainer();
-      movies.forEach((movie, index) => {
-          const movieCard = createMovieCard(currentPage, itemsPerPage, index);
+      data.movies.forEach((movie, index) => {
+          const movieCard = createMovieCard(data.currentPage, data.itemsPerPage, index);
 
-          const movieImage = createMovieImage(movie, posterPathPrefix);
+          const movieImage = createMovieImage(movie, data.moviesPosterPathPrefix);
           const movieHeading = createMovieHeading(movie);
           const movieDetails = createMovieDetails(movie);
 
@@ -165,7 +165,6 @@ function View(){
         }
     }
 
-    
     function attachListeners(element, handler){
   
       function attachNavigationListener(){
@@ -205,8 +204,6 @@ function View(){
       }
     }
     
-
-
     function toggleFavouriteIcon() {
         this.classList.toggle(favouriteIconMarkedClass);
     }

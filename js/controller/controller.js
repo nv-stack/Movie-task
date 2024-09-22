@@ -41,9 +41,14 @@ function Controller(){
     }
 
     function renderMovies(){
-        const data = model.getPaginatedData();
-        if(!data) throw new Error("No movies to render");
-        view.renderMovies(data, model.moviePosterPathPrefix, model.getCurrentPage(), model.getItemsPerPage());
+        const movies = model.getPaginatedData();
+        if(!movies) throw new Error("No movies to render");
+        view.renderMovies({
+            movies,
+            moviesPosterPathPrefix: model.getMoviePosterPathPrefix(),
+            currentPage: model.getCurrentPage(),
+            itemsPerPage: model.getItemsPerPage()
+        });
     }
 
     function loadMoreMovies(handlers){
