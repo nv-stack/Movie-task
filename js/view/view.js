@@ -91,15 +91,16 @@ function View(){
         mainContainer.classList.remove(noContentClass);
       }
     }
-    
-    function setLoader() {
-      mainContainer.innerHTML = `<div class="${loaderClass}"></div>`;
-      containerNoContentAdjustment();
-    }
-    
-    function removeLoader() {
-        const loader = document.querySelector(`.${loaderClass}`);
-        if (loader) loader.remove();
+
+    const loader = {
+      setLoader() {
+        mainContainer.innerHTML = `<div class="${loaderClass}"></div>`;
+        containerNoContentAdjustment();
+      },
+      removeLoader() {
+          const loader = document.querySelector(`.${loaderClass}`);
+          if (loader) loader.remove();
+      }
     }
     
     function handleNoContent(text) {
@@ -217,25 +218,26 @@ function View(){
         this.classList.toggle(favouriteIconMarkedClass);
     }
 
-    function getScrollMeasures(){
+    const measures = {
+      getScrollMeasures(){
         const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
         return { scrollTop, scrollHeight, clientHeight };
+      },
+      getContainerRowMeasures(){
+        return containerRowMeasures(mainContainer, movieCardClass);
+      }
     }
 
     return {
       renderMovies,
       lazyLoadImages, 
-      setLoader,
-      removeLoader,
+      loader,
       handleNoContent,
       toggleFavouriteIcon,
       applyFocusToElement,
       attachListeners,
       elements,
-      getScrollMeasures,
-      getContainerRowMeasures: function () {
-        return containerRowMeasures(mainContainer, movieCardClass);
-      },
+      measures
     };
 }
 

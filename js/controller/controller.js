@@ -15,9 +15,9 @@ function Controller(){
 
     async function initializeApp() {
         try {
-            view.setLoader();
+            view.loader.setLoader();
             await model.getMovies(removeDuplicates, sortByImdbRating);
-            view.removeLoader();
+            view.loader.removeLoader();
             createUI();
         } catch (error) { 
             view.handleNoContent(error.message);
@@ -95,7 +95,7 @@ function Controller(){
         }
 
         function scrollHandler(){
-            const { scrollTop, scrollHeight, clientHeight } = view.getScrollMeasures();
+            const { scrollTop, scrollHeight, clientHeight } = view.measures.getScrollMeasures();
             if (scrollTop + clientHeight >= scrollHeight - offsetScrollLoader) loadMoreMovies({navigatonHandler, toggleFavouriteHandler});
         }
 
