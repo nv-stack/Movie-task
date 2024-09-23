@@ -62,27 +62,30 @@ function Controller(){
     }
 
     function setupPagination(handler){
-        view.attachScrollOnWindowListener(handler);
+        view.attachListeners({handler}).attachScrollOnListener();
     }
 
     function attachListeners(handlers){
         const currentPage = model.getCurrentPage();
         const itemsPerPage = model.getItemsPerPage();
         view.lazyLoadImages(currentPage, itemsPerPage);
-        view.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
-            view.attachListeners(card, handlers.navigatonHandler).attachNavigationListener();
-            view.attachListeners(card, function(){
-                handlers.toggleFavouriteHandler.call(view.getFavouriteSvgFromMovieCard(this));
-            }).attachEnterListener();
-            view.attachListeners(card).attachFocusListener();
+        view.elements.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
+            view.attachListeners({element: card,
+                                handler: handlers.navigatonHandler}).attachNavigationListener();
+            view.attachListeners({element: card, 
+                                handler: function(){
+                handlers.toggleFavouriteHandler.call(view.elements.getFavouriteSvgFromMovieCard(this));
+            }}).attachEnterListener();
+            view.attachListeners({element: card}).attachFocusListener();
         });
-        view.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
-            view.attachListeners(icon, handlers.toggleFavouriteHandler).attachClickListener();
+        view.elements.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
+            view.attachListeners({element: icon, 
+                                handler: handlers.toggleFavouriteHandler}).attachClickListener();
         });
     }
     
     function defineEventHandlers(){
-        const { DIRECTION, offsetScrollLoader } = getConfigForHandlers();
+        const { DIRECTION, offsetScrollLoader } = getConfig();
 
         function navigatonHandler(event){
             if (DIRECTION.RIGHT.condition(event)) view.applyFocusToElement(this, DIRECTION.RIGHT.action());
@@ -100,7 +103,7 @@ function Controller(){
             view.toggleFavouriteIcon.call(this);
         }
 
-        function getConfigForHandlers(){
+        function getConfig(){
             const recalculateItemsPerRow = calculateItemsPerRow(view);
             const offsetScrollLoader = 5;
             const DIRECTION = {

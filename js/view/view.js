@@ -134,14 +134,6 @@ function View(){
       });
     }
 
-    function getMovieCards(currentPage, itemsPerPage) {
-        return getSlicedElements(mainContainer.querySelectorAll(`.${movieCardClass}`), currentPage, itemsPerPage);
-    }
-
-    function getFavouriteIcons(currentPage, itemsPerPage) {
-        return getSlicedElements(mainContainer.querySelectorAll(".favourite-svg"), currentPage, itemsPerPage);
-    }
-
     function applyFocusToElement(current, position) {
         let elementToFocus = current;
         if(position > 0) goForward();
@@ -165,7 +157,19 @@ function View(){
         }
     }
 
-    function attachListeners(element, handler){
+    const elements = {
+      getMovieCards(currentPage, itemsPerPage) {
+        return getSlicedElements(mainContainer.querySelectorAll(`.${movieCardClass}`), currentPage, itemsPerPage);
+      },
+      getFavouriteIcons(currentPage, itemsPerPage) {
+          return getSlicedElements(mainContainer.querySelectorAll(".favourite-svg"), currentPage, itemsPerPage);
+      },
+      getFavouriteSvgFromMovieCard(card){
+        return card.querySelector(`.${favouriteiconClass}`);
+      }
+    }
+
+    function attachListeners({element = window, handler}){
   
       function attachNavigationListener(){
           element.addEventListener("keydown", handler);
@@ -196,11 +200,16 @@ function View(){
           element.addEventListener("click", handler);
       }
 
+      function attachScrollOnListener(){
+        element.addEventListener("scroll", handler);
+      }
+
       return {
           attachNavigationListener,
           attachEnterListener,
           attachFocusListener,
           attachClickListener,
+          attachScrollOnListener
       }
     }
     
@@ -213,14 +222,6 @@ function View(){
         return { scrollTop, scrollHeight, clientHeight };
     }
 
-    function attachScrollOnWindowListener(handler){
-        window.addEventListener("scroll", handler);
-    }
-
-    function getFavouriteSvgFromMovieCard(card){
-        return card.querySelector(`.${favouriteiconClass}`);
-    }
-
     return {
       renderMovies,
       lazyLoadImages, 
@@ -230,11 +231,8 @@ function View(){
       toggleFavouriteIcon,
       applyFocusToElement,
       attachListeners,
-      attachScrollOnWindowListener,
-      getMovieCards,
-      getFavouriteIcons,
+      elements,
       getScrollMeasures,
-      getFavouriteSvgFromMovieCard,
       getContainerRowMeasures: function () {
         return containerRowMeasures(mainContainer, movieCardClass);
       },

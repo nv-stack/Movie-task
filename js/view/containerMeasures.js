@@ -16,8 +16,9 @@ export default function(mainContainer, movieCardClass) {
   }
 
   function getContainerWidth() {
-    return mainContainer.clientWidth;
+    return mainContainer.getBoundingClientRect().width;
   }
+
   return {
     getComputedStyleOfContainer,
     getContainerDimensions,
