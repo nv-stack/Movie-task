@@ -15,9 +15,9 @@ function Controller(){
 
     async function initializeApp() {
         try {
-            view.loader.setLoader();
+            view.getLoaderAPI().setLoader();
             await model.getMovies(removeDuplicates, sortByImdbRating);
-            view.loader.removeLoader();
+            view.getLoaderAPI().removeLoader();
             createUI();
         } catch (error) { 
             view.handleNoContent(error.message);
@@ -69,16 +69,16 @@ function Controller(){
         const currentPage = model.getCurrentPage();
         const itemsPerPage = model.getItemsPerPage();
         view.lazyLoadImages(currentPage, itemsPerPage);
-        view.elements.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
+        view.getElementsAPI().getMovieCards(currentPage, itemsPerPage).forEach((card) => {
             view.attachListeners({element: card,
                                 handler: handlers.navigatonHandler}).attachNavigationListener();
             view.attachListeners({element: card, 
                                 handler: function(){
-                handlers.toggleFavouriteHandler.call(view.elements.getFavouriteSvgFromMovieCard(this));
+                handlers.toggleFavouriteHandler.call(view.getElementsAPI().getFavouriteSvgFromMovieCard(this));
             }}).attachEnterListener();
             view.attachListeners({element: card}).attachFocusListener();
         });
-        view.elements.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
+        view.getElementsAPI().getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
             view.attachListeners({element: icon, 
                                 handler: handlers.toggleFavouriteHandler}).attachClickListener();
         });
@@ -95,7 +95,7 @@ function Controller(){
         }
 
         function scrollHandler(){
-            const { scrollTop, scrollHeight, clientHeight } = view.measures.getScrollMeasures();
+            const { scrollTop, scrollHeight, clientHeight } = view.getMeasuresAPI().getScrollMeasures();
             if (scrollTop + clientHeight >= scrollHeight - offsetScrollLoader) loadMoreMovies({navigatonHandler, toggleFavouriteHandler});
         }
 

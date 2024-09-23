@@ -92,7 +92,7 @@ function View(){
       }
     }
 
-    const loader = {
+    const loaderAPI = {
       setLoader() {
         mainContainer.innerHTML = `<div class="${loaderClass}"></div>`;
         containerNoContentAdjustment();
@@ -158,7 +158,7 @@ function View(){
         }
     }
 
-    const elements = {
+    const elementsAPI = {
       getMovieCards(currentPage, itemsPerPage) {
         return getSlicedElements(mainContainer.querySelectorAll(`.${movieCardClass}`), currentPage, itemsPerPage);
       },
@@ -218,7 +218,7 @@ function View(){
         this.classList.toggle(favouriteIconMarkedClass);
     }
 
-    const measures = {
+    const measuresAPI = {
       getScrollMeasures(){
         const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
         return { scrollTop, scrollHeight, clientHeight };
@@ -231,13 +231,19 @@ function View(){
     return {
       renderMovies,
       lazyLoadImages, 
-      loader,
+      getLoaderAPI(){
+        return loaderAPI;
+      },
       handleNoContent,
       toggleFavouriteIcon,
       applyFocusToElement,
       attachListeners,
-      elements,
-      measures
+      getElementsAPI(){
+        return elementsAPI;
+      },
+      getMeasuresAPI(){
+        return measuresAPI;
+      }
     };
 }
 

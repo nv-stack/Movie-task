@@ -3,7 +3,7 @@ export default function (view){
             getContainerDimensions,
             getMovieCardDimensions,
             getContainerWidth
-    } = view.measures.getContainerRowMeasures();
+    } = view.getMeasuresAPI().getContainerRowMeasures();
     
     let containerDimesions = getContainerDimensions(getComputedStyleOfContainer());
     let containerPaddingLeft = containerDimesions.containerPaddingLeft;
