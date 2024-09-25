@@ -14,10 +14,11 @@ function Controller(){
     const view = View();
 
     async function initializeApp() {
+        const loaderAPI = view.getLoaderAPI();
         try {
-            view.getLoaderAPI().setLoader();
+            loaderAPI.setLoader();
             await model.getMovies(removeDuplicates, sortByImdbRating);
-            view.getLoaderAPI().removeLoader();
+            loaderAPI.removeLoader();
             createUI();
         } catch (error) { 
             view.handleNoContent(error.message);
@@ -68,17 +69,18 @@ function Controller(){
     function attachListeners(handlers){
         const currentPage = model.getCurrentPage();
         const itemsPerPage = model.getItemsPerPage();
+        const elementsAPI = view.getElementsAPI();
         view.lazyLoadImages(currentPage, itemsPerPage);
-        view.getElementsAPI().getMovieCards(currentPage, itemsPerPage).forEach((card) => {
+        elementsAPI.getMovieCards(currentPage, itemsPerPage).forEach((card) => {
             view.attachListeners({element: card,
                                 handler: handlers.navigatonHandler}).attachNavigationListener();
             view.attachListeners({element: card, 
                                 handler: function(){
-                handlers.toggleFavouriteHandler.call(view.getElementsAPI().getFavouriteSvgFromMovieCard(this));
+                handlers.toggleFavouriteHandler.call(elementsAPI.getFavouriteSvgFromMovieCard(this));
             }}).attachEnterListener();
             view.attachListeners({element: card}).attachFocusListener();
         });
-        view.getElementsAPI().getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
+        elementsAPI.getFavouriteIcons(currentPage, itemsPerPage).forEach((icon) => {
             view.attachListeners({element: icon, 
                                 handler: handlers.toggleFavouriteHandler}).attachClickListener();
         });
